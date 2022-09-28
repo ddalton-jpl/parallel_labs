@@ -20,7 +20,8 @@ public class Inputter extends JFrame implements KeyListener, Runnable {
 
 	private static Thread t1;
 	private static Thread t2;
-	private boolean flag = false;
+	private static boolean flag = false;
+	private static int counter;
 
 	public Inputter(String name) {
 		super(name);
@@ -45,18 +46,25 @@ public class Inputter extends JFrame implements KeyListener, Runnable {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		output.append("Pressed a Key on Keyboard!\n");
-		t1.interrupt();
+		counter++;
+
+		if (counter == 1) {
+			t1.interrupt();
+		}
+		else if (counter == 2) {
+			t2.interrupt();
+		}
+		else if (counter == 3) {
+			output.append("All Threads are interrupted!\n");
+		}
+		else if (counter > 3) {
+			output.append("" + e.getKeyChar());
+		}
 	}
 
 	@Override
 	//
 	public void keyReleased(KeyEvent e) {
-		int keyCode = e.getKeyCode(); // study KeyEvent class API
-		if (keyCode == KeyEvent.VK_ENTER)
-			output.append("Key Released, you just pressed an Enter Key!\n");
-		else
-			output.append("Key Released, you just pressed the character \'" + e.getKeyChar() + "\'\n");
 	}
 
 	public static void main(String[] args) {
@@ -73,14 +81,17 @@ public class Inputter extends JFrame implements KeyListener, Runnable {
 		t1.start();
 		t2.start();
 	}
+
 	@Override
 	public void run() {
-		while (!flag) {
+
+		while (flag != true) {
 			try {
 				Thread.sleep(1000);
 				output.append("Mesasge from thread -->" + Thread.currentThread().getName() + "\n");
 			} catch (InterruptedException e1) {
-				output.append("Thread-1 Gets Interrupted! Terminate!");
+				output.append(Thread.currentThread().getName() + " Gets Interrupted! Terminate!\n");
+				throw new RuntimeException(Thread.currentThread().getName() + " Gets Interrupted! Terminate!\n");
 			}
 		}
 	}
