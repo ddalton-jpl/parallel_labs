@@ -20,7 +20,6 @@ public class Inputter extends JFrame implements KeyListener, Runnable {
 
 	private static Thread t1;
 	private static Thread t2;
-	private static boolean flag = false;
 	private static int counter;
 
 	public Inputter(String name) {
@@ -85,7 +84,7 @@ public class Inputter extends JFrame implements KeyListener, Runnable {
 	@Override
 	public void run() {
 
-		while (flag != true) {
+		while (true) {
 			try {
 				Thread.sleep(1000);
 				output.append("Mesasge from thread -->" + Thread.currentThread().getName() + "\n");
