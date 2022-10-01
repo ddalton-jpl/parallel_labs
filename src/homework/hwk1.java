@@ -1,4 +1,4 @@
-package edu.ewu.ytian.displayinput;
+package homework;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -19,9 +19,9 @@ public class hwk1 extends JFrame implements KeyListener, Runnable {
 	private static JTextArea output;
 
 	private static Thread t1;
-	private static Thread t2;
-	// TODO add stops to while loop when type event is triggered and resumes when enter is pressed
-	private boolean flag = false;
+	private static String msg = "";
+	private static hwk1 inp;
+	private Boolean flag = false;
 
 	public hwk1(String name) {
 		super(name);
@@ -32,12 +32,35 @@ public class hwk1 extends JFrame implements KeyListener, Runnable {
 		DefaultCaret caret = (DefaultCaret) output.getCaret();
 		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE); // JTextArea always set focus on the last message appended.
 
-		//
 		add(new JScrollPane(output)); // add a Scroll bar to JFrame, scrolling associated with JTextArea object
 		setSize(500, 500); // when lines of messages exceeds the line capacity of JFrame, scroll bar scroll
 							// down.
 		setVisible(true);
 		output.addKeyListener(this); // Adds the specified key listener to receive key events from this component.
+	}
+
+	public void inputter(KeyEvent e) {
+		if (t1 != null) {
+			flag = false;
+			t1.interrupt();
+			try {
+				t1.join();
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		if (e.getKeyCode() != KeyEvent.VK_ENTER) {
+			hwk1.msg += e.getKeyChar();
+		} else if (e.getKeyCode() == KeyEvent.VK_ENTER && msg.length() > 0) {
+			if (hwk1.msg.equals("exit")) {
+				System.exit(0);
+			}
+			t1 = new Thread(hwk1.inp, hwk1.msg);
+			hwk1.msg = "";
+			t1.start();
+			flag = true;
+		}
 	}
 
 	@Override
@@ -46,6 +69,7 @@ public class hwk1 extends JFrame implements KeyListener, Runnable {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
+		inputter(e);
 	}
 
 	@Override
@@ -54,29 +78,24 @@ public class hwk1 extends JFrame implements KeyListener, Runnable {
 	}
 
 	public static void main(String[] args) {
-		hwk1 inp = new hwk1("A JFrame and KeyListener Demo");
+		hwk1.inp = new hwk1("A JFrame and KeyListener Demo");
 		inp.addWindowListener(
 				new WindowAdapter() {
 					public void windowClosing(WindowEvent e) {
 						System.exit(0);
 					}
 				});
-
-		// TODO add thread names as input
-		t1 = new Thread(inp, "Thread-1");
-		t2 = new Thread(inp, "Thread-2");
-		t1.start();
-		t2.start();
 	}
+
 	@Override
 	public void run() {
-		// while (!flag) {
-		// 	try {
-		// 		Thread.sleep(1000);
-		// 		output.append("Mesasge from thread -->" + Thread.currentThread().getName() + "\n");
-		// 	} catch (InterruptedException e1) {
-		// 		output.append("Thread-1 Gets Interrupted! Terminate!");
-		// 	}
-		// }
+		while (flag) {
+			try {
+				Thread.sleep(1000);
+				output.append(Thread.currentThread().getName() + "\n");
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
+		}
 	}
 }
