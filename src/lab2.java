@@ -59,7 +59,7 @@ public class lab2 extends JFrame implements KeyListener, Runnable {
                 });
 
         t1 = new Thread(lab2.inp, "Printer");
-        t2 = new Thread(lab2.inp, "Writer");
+        t2 = new Thread(lab2.inp, "Waiter");
 
         t1.start();
         t2.start();
@@ -70,14 +70,14 @@ public class lab2 extends JFrame implements KeyListener, Runnable {
         for (int i = 0; i <= 50; i++) {
             try {
                 Thread.sleep(100);
-                if (i == 26 & Thread.currentThread().getName() == "Writer") {
+                if (i == 26 & Thread.currentThread().getName() == "Waiter") {
                     output.append("Printer got his work half done! \n");
                     t2.interrupt();
                 } else if (Thread.currentThread().getName() == "Printer") {
                     output.append("Message i = " + i + ", from Thread " + Thread.currentThread().getName() + "\n");
                 }
             } catch (InterruptedException e1) {
-                if (Thread.currentThread().getName() == "Writer") {
+                if (Thread.currentThread().getName() == "Waiter") {
                     output.append("Waiter has done its work, terminating. \n");
                 }
             }
