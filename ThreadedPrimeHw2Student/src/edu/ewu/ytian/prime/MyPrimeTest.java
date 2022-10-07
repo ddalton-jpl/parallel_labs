@@ -9,6 +9,7 @@ public class MyPrimeTest {
 			return;
 		}
 		int nthreads = Integer.parseInt(args[0]);
+		ThreadPrime.CreateThread(nthreads);
 		int low = Integer.parseInt(args[1]);
 		int high = Integer.parseInt(args[2]);
 		Counter c = new Counter();
@@ -22,7 +23,7 @@ public class MyPrimeTest {
 		
 		//test of concurrent code
 		// **************************************
-        // Write me here
+        // TODO Write me here
 		
 		
 		Integer timeCostCon = 0;
@@ -32,7 +33,6 @@ public class MyPrimeTest {
 		
 		System.out.println("Number prime found by serial code is: " + numPrimeSerial);
 		System.out.println("Number prime found by parallel code is " + c.total());
-	}
-		
+	}	
 
 }

@@ -5,10 +5,11 @@ public class Counter {
 
     public synchronized void increment( int n) {
         // write me here
+        c++;
     }
 
     public synchronized int total() {
         // write me here
-        return 0;
+        return c;
     }
 }
