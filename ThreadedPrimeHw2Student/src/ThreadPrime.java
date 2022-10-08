@@ -1,25 +1,16 @@
-package edu.ewu.ytian.prime;
+
 
 public class ThreadPrime extends Thread {
 	private int low;
 	private int high;
 	private int numFound = 0;
 	private Counter c;
-	private static Thread[] threads;
 
 	// each thread only takes care of one subrange (low, high)
 	public ThreadPrime(int lowLocal, int highLocal, Counter ct) {
 		this.low = lowLocal;
 		this.high = highLocal;
 		c = ct;
-	}
-
-	// Create a n number of threads
-	public static void CreateThread(int n) {
-		threads = new Thread[n];
-		for (int i = 0; i < threads.length; i++) {
-			threads[i] = new Thread();
-		}
 	}
 
 	public int getNumFound() {
@@ -46,5 +37,6 @@ public class ThreadPrime extends Thread {
 				numFound++;
 			}
 		}
+		this.c.increment(numFound);
 	}
 }

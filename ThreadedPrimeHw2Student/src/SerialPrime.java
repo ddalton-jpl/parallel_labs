@@ -1,4 +1,4 @@
-package edu.ewu.ytian.prime;
+
 
 public class SerialPrime {
 	
