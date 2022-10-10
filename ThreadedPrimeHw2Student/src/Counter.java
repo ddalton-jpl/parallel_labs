@@ -1,11 +1,14 @@
 
-
 public class Counter {
-	private int c = 0;
+    private int c = 0;
 
-    public synchronized void increment( int n) {
+    public synchronized void increment(int n) {
         // write me here
-        c++;
+        int i = 0;
+        while (i < n) {
+            c++;
+            i++;
+        }
     }
 
     public synchronized int total() {

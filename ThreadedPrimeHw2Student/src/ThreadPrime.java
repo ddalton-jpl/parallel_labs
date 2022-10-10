@@ -13,12 +13,8 @@ public class ThreadPrime extends Thread {
 		c = ct;
 	}
 
-	public int getNumFound() {
-		return numFound;
-	}
-
 	// checks whether an int n is prime or not.
-	public static synchronized boolean isPrime(int n) {
+	public static boolean isPrime(int n) {
 		// check if n is a multiple of 2
 		if (n % 2 == 0)
 			return false;
@@ -30,9 +26,9 @@ public class ThreadPrime extends Thread {
 		return true;
 	}
 
-	public void run() {
+	public synchronized void run() {
 		// write me here
-		for (int i = this.low; i <= this.high; i++) {
+		for (int i = low; i <= high; i++) {
 			if (isPrime(i)) {
 				numFound++;
 			}

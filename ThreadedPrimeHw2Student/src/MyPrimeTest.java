@@ -1,18 +1,15 @@
-import java.util.Scanner;
-
 public class MyPrimeTest {
 	private static ThreadPrime[] threads;
 
 	public static void main(String[] args) throws InterruptedException {
-		// if (args.length < 3) {
-		// 	System.out.println("Usage: MyPrimeTest numThread low high \n");
-		// 	return;
-		// }
+		if (args.length < 3) {
+			System.out.println("Usage: MyPrimeTest numThread low high \n");
+			return;
+		}
 
-		// TODO fix after testing
-		int nthreads = Integer.parseInt("4");
-		int low = Integer.parseInt("1");
-		int high = Integer.parseInt("100000");
+		int nthreads = Integer.parseInt(args[0]);
+		int low = Integer.parseInt(args[1]);
+		int high = Integer.parseInt(args[2]);
 		Counter c = new Counter();
 
 		// test cost of serial code
@@ -26,14 +23,10 @@ public class MyPrimeTest {
 		// **************************************
 		createThreads(nthreads, low, high, c);
 		long startParallel = System.currentTimeMillis();
-
+		startThreads();
 		joinThreads();
 		long endParallel = System.currentTimeMillis();
-
 		long timeCostParallel = endParallel - startParallel;
-		System.out.println("Time cost of serial code: " + timeCostParallel + " ms.");
-
-		// **************************************
 		System.out.println("Time cost of parallel code: " + timeCostParallel + " ms.");
 		System.out.format("The speedup ration is by using concurrent programming: %5.2f. %n",
 				(double) timeCostSer / timeCostParallel);
@@ -42,25 +35,30 @@ public class MyPrimeTest {
 		System.out.println("Number prime found by parallel code is " + c.total());
 	}
 
+	public static void startThreads() {
+		for (int i = 0; i < threads.length; i++) {
+			threads[i].start();
+		}
+	}
+
 	public static void createThreads(int nthreads, int low, int high, Counter c) {
 		// Create a n number of threads
 		threads = new ThreadPrime[nthreads];
 
-		int total = low + high;
-		int region = total / nthreads;
+		int region = high / nthreads;
 		threads[0] = new ThreadPrime(low, region, c);
+		high = region;
 
 		for (int i = 1; i < threads.length; i++) {
-			low = region;
-			high = region + region;
+			low = high;
+			high = region + high;
 			threads[i] = new ThreadPrime(low, high, c);
-			threads[i].start();
 		}
 	}
 
 	public static void joinThreads() {
 		int i = 0;
-		while (threads.length < i) {
+		while (threads.length > i) {
 			try {
 				threads[i].join();
 			} catch (InterruptedException e) {
